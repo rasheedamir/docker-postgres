@@ -1,15 +1,8 @@
-# Docker Images
+# Docker Postgres
 
-This repository contains the Dockerfiles for all of the building block images that Connexio Labs uses for app and service related images.
+Adds the following extensions on top of the [official 9.3 image](https://registry.hub.docker.com/_/postgres/)
 
-## Making Changes
-
-If a changes is made to one of the Dockerfiles the image should be re-built and pushed to the docker index.
-
-```sh
-cd base
-docker build --tag connexiolabs/base .
-docker push connexiolabs/base
-```
-
-If you receive an error about authentication run `docker login` and follow prompts.
+  * [postgis](http://postgis.net/)
+  * [temporal_tables](http://pgxn.org/dist/temporal_tables/1.0.0/)
+  * [mongo_fdw](https://github.com/citusdata/mongo_fdw)
+  * [hashtypes](http://pgxn.org/dist/hashtypes/)

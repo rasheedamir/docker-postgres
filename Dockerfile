@@ -1,15 +1,8 @@
-FROM postgres:9.3.5
+FROM postgres:9.4
 
-MAINTAINER John Allen <john.allen@connexiolabs.com>
+MAINTAINER Jean-Marc <jeanmarc.soumet@relateiq.com>
 
-# adds the following extensions on top of the official 9.3 image
-#
-#   * postgis
-#   * temporal_tables
-#   * mongo_fdw
-#   * hashtypes
-
-ENV PG_EXTENSION_VERSION 9.3
+ENV PG_EXTENSION_VERSION 9.4
 ENV POSTGIS_VERSION 2.1
 ENV TEMPORAL_TABLES_VERSION 1.0.1
 ENV MONGODB_VERSION 2.0.0
@@ -18,7 +11,7 @@ ENV HASHTYPES_VERSION 0.1.1
 WORKDIR /tmp
 
 RUN apt-get -y update && \
-    apt-get install -y wget && \
+    apt-get install -y wget protobuf-c-compiler libprotobuf-c0-dev && \
 
     # postgis
     echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" >> /etc/apt/sources.list && \
@@ -29,6 +22,16 @@ RUN apt-get -y update && \
         postgresql-server-dev-$PG_EXTENSION_VERSION \
         postgresql-$PG_EXTENSION_VERSION-postgis-$POSTGIS_VERSION \
         postgis && \
+
+    # cstore_fdw
+    cd /tmp && \
+    wget --quiet --no-check-certificate -O cstore_fdw.zip \
+    https://codeload.github.com/citusdata/cstore_fdw/zip/master && \
+    unzip cstore_fdw.zip && \
+    cd cstore_fdw-master && \
+    PATH=/usr/local/pgsql/bin/:$PATH make && \
+    PATH=/usr/local/pgsql/bin/:$PATH make install && \
+    
 
     # temporal_tables
     wget --quiet \

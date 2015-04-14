@@ -1,0 +1,10 @@
+postgresql:
+  image: docker.amz.relateiq.com/docker-postgres:latest
+  environment:
+    POSTGRES_USER: admin
+    POSTGRES_PASSWORD: password
+    PG_DATA: /data
+  volumes:
+    - "~/data/postgres_data:/data"
+  ports:
+    - "5432:5432"
